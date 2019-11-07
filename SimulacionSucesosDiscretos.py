@@ -44,7 +44,8 @@ def obtain_gaussian_parameters(filename):
     return (mean,std)
 
 ##########################################################
-def simulation(gmean, gstd, T=1000, n_active_machines=10, n_workers=3, n_reserve=4, initial_performance=0.55, final_performance=1.65):
+def simulation(gmean, gstd, T=1000, n_active_machines=10, n_workers=3, n_reserve=4, 
+                initial_performance=0.55, final_performance=1.65):
     #Intial values for the machines
     working_machines=n_active_machines
     reserve_machines=n_reserve
@@ -155,19 +156,68 @@ plt.legend(loc='upper left')
 plt.show()"""
     
 if __name__ == "__main__":
-    props_function=[]
-    props_allfixing=[]
 
     gmean,gstd=obtain_gaussian_parameters('E6.fallos.txt')
 
+    mean_function = []
+    mean_fixing = []
+
+    props_function=[]
+    props_allfixing=[]
     for rep in range(200):
         x, y = simulation(gmean, gstd)
         props_function.append(x)
         props_allfixing.append(y)
 
+    mean_function.append(np.mean(props_function))
+    mean_fixing.append(np.mean(props_allfixing))
+
+    plt.hist(props_function,color='r', alpha=0.5, label='Functioning')
+    plt.hist(props_allfixing, alpha=0.5, label='All fixing')
+    plt.title('Times proportion histogram standard simulation')
+    plt.xlabel('Time proportion')
+    plt.ylabel('Number of simulations')
+    plt.legend(loc='upper center')
+    plt.show()
+
+    props_function=[]
+    props_allfixing=[]
+    for rep in range(200):
+        x, y = simulation(gmean, gstd, n_workers=4)
+        props_function.append(x)
+        props_allfixing.append(y)
+
+    mean_function.append(np.mean(props_function))
+    mean_fixing.append(np.mean(props_allfixing))
+
     plt.hist(props_function,color='r',alpha=0.5,label='Functioning')
     plt.hist(props_allfixing,alpha=0.5, label='All fixing')
-    plt.title('Times proportion histogram')
+    plt.title('Times proportion histogram 4 workers')
+    plt.xlabel('Time proportion')
+    plt.ylabel('Number of simulations')
     plt.legend(loc='upper center')
-
     plt.show()
+
+    props_function=[]
+    props_allfixing=[]
+    for rep in range(200):
+        x, y = simulation(gmean, gstd, n_reserve=5)
+        props_function.append(x)
+        props_allfixing.append(y)
+
+    mean_function.append(np.mean(props_function))
+    mean_fixing.append(np.mean(props_allfixing))
+
+    plt.hist(props_function,color='r',alpha=0.5,label='Functioning')
+    plt.hist(props_allfixing,alpha=0.5, label='All fixing')
+    plt.title('Times proportion histogram 5 reserve machines')
+    plt.legend(loc='upper center')
+    plt.show()
+
+    for mean in mean_function:
+        print("Percentage function: " + str(mean))
+
+    print("--------------")
+
+    for mean in mean_fixing:
+        print("Percentage fixing: " + str(mean))
