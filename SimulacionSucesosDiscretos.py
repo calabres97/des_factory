@@ -44,16 +44,15 @@ def obtain_gaussian_parameters(filename):
     std=np.std(values)
     return (mean,std)
 
-##########################################################
+
 def simulation(gmean, gstd, T=1000, n_active_machines=10, n_workers=3, n_reserve=4, 
                 initial_performance=0.55, final_performance=1.65):
-    #Intial values for the machines
+
     working_machines=n_active_machines
     reserve_machines=n_reserve
     fixing_machines=0
     waiting_machines=0
 
-    #Crashing
     function_time=0
     f_times=[[],[]]
     crash_times=[]
@@ -61,8 +60,6 @@ def simulation(gmean, gstd, T=1000, n_active_machines=10, n_workers=3, n_reserve
     for _ in range(working_machines):
         crash_times+=[next_crash_time(gmean,gstd)]
 
-    #Fixing
-    #When a worker time is empty, it will be equal to T-t(left)
     fix_times=[T]*n_workers
     all_working_time=0
     all_times=[[],[]]
@@ -91,23 +88,18 @@ def simulation(gmean, gstd, T=1000, n_active_machines=10, n_workers=3, n_reserve
         t+=step
         left-=step
 
-        #Uploading stadistics
         if working_machines==n_active_machines:
             function_time+=step
             f_times[0].append(t)
             f_times[1].append(function_time)
         if not (left) in fix_times:
-            #If all workers are working
             all_working_time+=step
             all_times[0].append(t)
             all_times[1].append(all_working_time)
                 
         if action==0:
-            #Time will be out before any other event
             break
         elif action==1:
-            #Next event is a fixed machine
-            #print('Fixed machine')
             ifix=fix_times.index(0)
             if waiting_machines>0:
                 waiting_machines-=1
@@ -124,8 +116,6 @@ def simulation(gmean, gstd, T=1000, n_active_machines=10, n_workers=3, n_reserve
                 crash_times[icrash]=next_crash_time(gmean,gstd)
             
         elif action==2:
-            #print('Crashed machine')
-            #Next event is a crashed machine
             icrash=crash_times.index(0)
             if reserve_machines>0:
                 reserve_machines-=1
@@ -147,14 +137,6 @@ def simulation(gmean, gstd, T=1000, n_active_machines=10, n_workers=3, n_reserve
 
     return props_function, props_allfixing
 
-
-#Realmente aqui solo estamos mostrando la ultima de las repeticiones de la
-#simulacion, como es asincrono no se como hacer una media
-"""plt.plot(f_times[0], f_times[1], 'r-',label='Functioning')
-plt.plot(all_times[0], all_times[1], 'b-',label='Fixing')
-plt.title('Functioning and fixing times through simulation')
-plt.legend(loc='upper left')
-plt.show()"""
     
 if __name__ == "__main__":
 
