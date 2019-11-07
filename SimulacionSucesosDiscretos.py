@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as plticker
 
 def next_crash_time(mean=2.798378171,std=0.20142525174966558):
     '''Returns next crashing time from a normal distribution
@@ -172,8 +173,9 @@ if __name__ == "__main__":
     mean_function.append(np.mean(props_function))
     mean_fixing.append(np.mean(props_allfixing))
 
-    plt.hist(props_function,color='r', alpha=0.5, label='Functioning')
+    plt.hist(props_function, color='r', alpha=0.5, label='Functioning')
     plt.hist(props_allfixing, alpha=0.5, label='All fixing')
+    plt.xticks(np.arange(0, 1, 0.1))
     plt.title('Times proportion histogram standard simulation')
     plt.xlabel('Time proportion')
     plt.ylabel('Number of simulations')
@@ -190,8 +192,9 @@ if __name__ == "__main__":
     mean_function.append(np.mean(props_function))
     mean_fixing.append(np.mean(props_allfixing))
 
-    plt.hist(props_function,color='r',alpha=0.5,label='Functioning')
-    plt.hist(props_allfixing,alpha=0.5, label='All fixing')
+    plt.hist(props_function, color='r', alpha=0.5,label='Functioning',)
+    plt.hist(props_allfixing, alpha=0.5, label='All fixing')
+    plt.xticks(np.arange(0, 1, 0.1))
     plt.title('Times proportion histogram 4 workers')
     plt.xlabel('Time proportion')
     plt.ylabel('Number of simulations')
@@ -208,8 +211,9 @@ if __name__ == "__main__":
     mean_function.append(np.mean(props_function))
     mean_fixing.append(np.mean(props_allfixing))
 
-    plt.hist(props_function,color='r',alpha=0.5,label='Functioning')
-    plt.hist(props_allfixing,alpha=0.5, label='All fixing')
+    plt.hist(props_function, color='r', alpha=0.5, label='Functioning')
+    plt.hist(props_allfixing, alpha=0.5, label='All fixing')
+    plt.xticks(np.arange(0, 1, 0.1))
     plt.title('Times proportion histogram 5 reserve machines')
     plt.legend(loc='upper center')
     plt.show()
